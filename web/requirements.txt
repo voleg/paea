@@ -1,0 +1,4 @@
+Django==2.2.11
+celery==4.4.0
+elasticsearch-dsl==6.4.0
+redis==3.4.1 w
