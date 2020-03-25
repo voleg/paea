@@ -1,5 +1,9 @@
 from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
+from algo.views import CalculationViewSet
 
-router.register(r'algos', DatabaseViewSet)
+
+router = DefaultRouter()
+router.register(r'algo', CalculationViewSet, basename='calculations')
+
+urlpatterns = router.urls
