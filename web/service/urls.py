@@ -17,7 +17,5 @@ from django.conf.urls import include, url
 from django.urls import path
 
 urlpatterns = [
-    url(r'^api/v1/', include(('api.urls', 'api'), namespace='api')),
-
-
+    url(r'^calculate/', include(('algo.urls', 'algo'), namespace='calculate')),
 ]
