@@ -7,10 +7,13 @@ from elasticsearch_dsl import (
     Integer,
     Text,
     InnerDoc,
+    Object,
     connections,
     Q,
     AttrDict
 )
+from service.celeryconfig import app as celery_app
+
 
 log = logging.getLogger(__name__)
 
@@ -18,17 +21,24 @@ connections.create_connection(hosts=settings.ELASTICSEARCH['HOSTS'], timeout=20)
 
 
 class Status:
+    new = 'new'
     accepted = 'accepted'
     complete = 'complete'
     error = 'error'
 
 
+class Params(InnerDoc):
+    name=Text()
+    value=Integer()
+
+
 class Calculation(Document):
     # _id = Integer()
     func_name = Text()
-    params = InnerDoc(enabled=False)   # just store it w/o indexing
+    status = Text()
+    params = Object(Params)
     created_at = Date()
-    results = InnerDoc()
+    results = Object()
 
     class Index:
         name = 'calculations'
@@ -37,11 +47,37 @@ class Calculation(Document):
             'number_of_replicas': 0
         }
 
+
+    def get_params(self):
+        params = {}
+        for p in self.params:
+            # type p: algo.indices.Params
+            key = p.name
+            val = p.value
+            if key:
+                params.update({key: val})
+
+        return params
+
     def run(self):
-        # TODO: add here calculation task execution celery.send_task
-        return
+        return celery_app.send_task(
+            'calculate_function',
+            queue='algos',
+            kwargs={
+                'on_result': {
+                    'queue': 'results',
+                    'task': 'store_calculation_result',
+                },
+                'options': {
+                    'id': self.meta.id,
+                    'func_name': self.func_name,
+                    'params': self.get_params()
+                },
+            }
+        )
 
     def save(self, **kwargs):
+        self.status = Status.new
         self.created_at = datetime.now()
         return super().save(**kwargs)
 
