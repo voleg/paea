@@ -149,19 +149,19 @@ REDIS_HOST = config_get('redis', 'REDIS_HOST')
 
 # BROKER
 BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
+# CELERY STUFF
 CELERY_TIMEZONE = 'UTC'
 CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
-
-# CELERY STUFF
-CELERY_DEFAULT_QUEUE = config_get('celery', 'CELERY_DEFAULT_QUEUE')
+CELERY_TASK_ACKS_LATE=True
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_IMPORTS = ('algo.tasks',)
 CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
     Queue('results', Exchange('results'), routing_key='results'),
 )
 
 CELERYD_HIJACK_ROOT_LOGGER = True
-
-CELERYD_MAX_MEMORY_PER_CHILD = 4 * 1024 * 1024  # 4GB
+CELERYD_MAX_MEMORY_PER_CHILD = 1 * 1024 * 1024
 CELERYD_MAX_TASKS_PER_CHILD = 4
 
 ELASTICSEARCH = {

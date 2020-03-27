@@ -25,6 +25,7 @@ task_ignore_result=True
 worker_prefetch_multiplier=1
 worker_max_tasks_per_child=1
 task_store_errors_even_if_ignored=True
+task_acks_late=True
 
 LOGGING = {
     'version': 1,
