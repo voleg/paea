@@ -1,4 +1,4 @@
-from celery import task
+from celery.decorators import task
 from celery.utils.log import get_task_logger
 
 from algo.indicies import Calculation, CalculationSearch
