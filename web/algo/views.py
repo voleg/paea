@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from algo.indicies import Calculation, CalculationSearch
 from algo.serializers import CalculationRequestSerializer
@@ -7,6 +8,45 @@ from algo.serializers import CalculationRequestSerializer
 
 class CalculationViewSet(viewsets.ViewSet):
     serializer_class = CalculationRequestSerializer
+
+    @action(methods=['GET'], detail=False, name='features')
+    def features(self, request):
+        data = {
+            'implementations': [
+                {
+                    'name': 'factorial',
+                    'params': [
+                        {
+                            'name': 'n',
+                            'type': 'number'
+                        }
+                    ]
+                },
+                {
+                    'name': 'fibonacci',
+                    'params': [
+                        {
+                            'name': 'n',
+                            'type': 'number'
+                        }
+                    ]
+                },
+                {
+                    'name': 'ackermann',
+                    'params': [
+                        {
+                            'name': 'm',
+                            'type': 'number'
+                        },
+                        {
+                            'name': 'n',
+                            'type': 'number'
+                        }
+                    ]
+                },
+            ]
+        }
+        return Response(data)
 
     def list(self, request):
         hits = (
