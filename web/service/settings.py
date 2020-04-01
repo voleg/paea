@@ -175,3 +175,70 @@ ELASTICSEARCH = {
 }
 
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s %(pathname)s:%(lineno)d] %(levelname)s: %(message)s'
+        },
+        'simple': {
+            'format': '[%(asctime)s %(name)s %(module)s] %(levelname)s: %(message)s'
+        },
+        'msg': {
+            'format': '%(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'ERROR',
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'ERROR',
+        },
+        'django.utils.autoreload': {
+            # Get rid of noisy debug messages
+            'handlers': ['console'],
+            'level': os.environ.get('LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'django.template': {
+            # Get rid of noisy debug messages
+            'handlers': ['console'],
+            'level': os.environ.get('LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO'
+        },
+        # 'django.db.backends': {
+        #    'handlers': ['console', 'sentry'],
+        #    'level': 'DEBUG' if DEBUG else 'ERROR'
+        # },
+        'celery': {
+            # 'level': 'DEBUG' if DEBUG else 'WARNING',
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'celery.task': {
+            'handlers': ['console'],
+            # 'level': 'DEBUG' if DEBUG else 'WARNING',
+            'propagate': True,
+        },
+        'django.db': {
+            'handlers': ['console'],
+            'level': 'INFO' if DEBUG else 'WARNING',
+            'propagate': False,
+        },
+    },
+}
