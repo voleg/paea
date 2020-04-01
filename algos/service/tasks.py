@@ -2,11 +2,13 @@ import time
 
 from celery import task
 from celery.utils.log import get_task_logger
+from celery.exceptions import SoftTimeLimitExceeded
 
 from service import settings
 
 log = get_task_logger(__name__)
 
+TIME_LIMIT = 30
 
 class Status:
     accepted = 'accepted'
@@ -14,7 +16,7 @@ class Status:
     error = 'error'
 
 
-@task(name='calculate_function', bind=True, soft_time_limit=120)
+@task(name='calculate_function', bind=True, soft_time_limit=TIME_LIMIT)
 def calculate(self, options=None, on_result=None, *args, **kwargs):
     from algos.interface import AlgoTools
 
@@ -65,6 +67,13 @@ def calculate(self, options=None, on_result=None, *args, **kwargs):
                 'execution_time': time.time() - t0
             }
         )
+    except SoftTimeLimitExceeded as e:
+        log.error(
+            'calculats too slow! {} {}'
+            .format(debug_info, e.__class__.__name__, e),
+            exc_info=True,
+        )
+        send(Status.error, result={'error': f'killed after {TIME_LIMIT} seconds'})
 
     except Exception as e:
         log.error(
