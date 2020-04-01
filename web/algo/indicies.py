@@ -8,6 +8,7 @@ from elasticsearch_dsl import (
     Text,
     InnerDoc,
     Object,
+    Keyword,
     connections,
     Q,
     AttrDict
@@ -34,8 +35,8 @@ class Params(InnerDoc):
 
 class Calculation(Document):
     # _id = Integer()
-    func_name = Text()
-    status = Text()
+    func_name = Text(fields={'raw': Keyword()})
+    status = Text(fields={'raw': Keyword()})
     params = Object(Params)
     created_at = Date()
     results = Object()
