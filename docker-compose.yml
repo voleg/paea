@@ -1,0 +1,99 @@
+version: '3.7'
+services:
+  # nginx:
+  #   build: ./nginx
+  #   restart: always
+  #   volumes:
+  #     - /opt/frontend/static:/frontend/static
+  #   networks:
+  #     - main
+  #   ports:
+  #     - 80:80
+
+  app:
+    container_name: algo_web
+    restart: always
+    build: ./web
+    volumes:
+      - /etc/algo_web:/etc/algo_web
+    networks:
+      - main
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - elasticsearch
+      - worker
+    command: ./deploy/docker_entry.sh
+
+  redis:
+    image: redis:latest
+    restart: always
+    hostname: redis
+    networks:
+      - main
+    ports:
+      - "6379:6379"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    networks:
+      - main
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.1
+    ports:
+      - 5601:5601
+    networks:
+      - main
+
+
+  worker:
+    build: ./web
+    restart: always
+    command: ./deploy/run_celery.sh
+    volumes:
+      - /etc/algo_web:/etc/algo_web
+      - /opt/pandora/media:/pandora/media
+      - /opt/pandora/tables:/pandora/annotation
+      - /data/mnt2/:/pandora/extra_data/
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+      - elasticsearch
+    networks:
+      - main
+
+  # flower:
+  #   build: flower
+  #   restart: unless-stopped
+  #   command: [
+  #     'celery', 'flower', '--broker=redis://redis',
+  #     '-Q default,services,results,algos', '-l info',
+  #     '--address=0.0.0.0', '--port=5555',
+  #   ]
+  #   networks:
+  #     - main
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - redis
+
+
+volumes:
+  data_web:
+
+networks:
+  main:

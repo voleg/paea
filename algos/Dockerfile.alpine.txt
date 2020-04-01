@@ -1,0 +1,17 @@
+FROM python:3.7.4-alpine
+LABEL authors="Oleg Sapunov <ffrooty@gmail.com>"
+
+RUN apk --update add --no-cache g++
+
+# COPY requirements.txt /code/requirements.txt
+# RUN pip install -r /code/requirements.txt
+
+ADD . /code
+WORKDIR /code
+
+# Remove develop settings from production image
+RUN rm -rf deploy/settings_dev.conf
+
+RUN python setup.py install
+
+ENTRYPOINT ["celery", "worker", "-A", "service.celeryconfig", "-l", "info", "-n", "algos@%h"]
