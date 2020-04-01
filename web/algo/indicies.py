@@ -137,7 +137,7 @@ class CalculationSearch(object):
             q = Q('match_all')
 
         qs = self.search.sort("-created_at").query(q)
-        
+
         return AttrDict({
             'total': qs.count(),
             'scroll': qs.scan(), # FIXME: does not respects sorting ...

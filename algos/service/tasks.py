@@ -27,7 +27,7 @@ def calculate(self, options=None, on_result=None, *args, **kwargs):
     _func_name = options['func_name']
     params = options['params']
 
-    debug_info = f'Algo: {_func_name} with params: {params}'
+    debug_info = f'Algo: {_func_name} with params: {params} {_id}'
 
     def send(status, result=None):
         kwargs = {
@@ -38,17 +38,14 @@ def calculate(self, options=None, on_result=None, *args, **kwargs):
 
         try:
             if result_queue and result_task:
-                log.info(f'Sending "{status}" {result_queue}/{result_task} #{_id}')
+                log.info(f'Sending "{status}" of {debug_info} {result_queue}/{result_task}')
                 self.app.send_task(result_task, queue=result_queue, kwargs=kwargs)
 
             else:
                 return kwargs
 
         except Exception as e:
-            log.error(
-                '{} Calculation Failed to send {} {}'
-                .format(debug_info, e.__class__.__name__, e)
-            )
+            log.error(f'{debug_info} Calculation Failed to send {e.__class__.__name__} {e}')
 
 
     log.info('Started calculation task'.format())
@@ -69,16 +66,14 @@ def calculate(self, options=None, on_result=None, *args, **kwargs):
         )
     except SoftTimeLimitExceeded as e:
         log.error(
-            'calculats too slow! {} {}'
-            .format(debug_info, e.__class__.__name__, e),
+           f'{debug_info} calculats too slow! {e.__class__.__name__} {e}',
             exc_info=True,
         )
         send(Status.error, result={'error': f'killed after {TIME_LIMIT} seconds'})
 
     except Exception as e:
         log.error(
-            'Failed to proceed {} {}'
-            .format(debug_info, e.__class__.__name__, e),
+            f'{debug_info} Failed to proceed {e.__class__.__name__} {e}',
             exc_info=True,
         )
         send(Status.error, result={'error': str(e)})

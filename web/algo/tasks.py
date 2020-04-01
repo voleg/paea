@@ -15,6 +15,7 @@ def store_calculation_result(**kwargs):
     doc = Calculation.get(id=calc_id)
     doc.update(
         status=status_message,
-        result = result
+        result = result,
+        # refresh=True,
     )
     log.info('Calculation #{} result saved'.format(calc_id))

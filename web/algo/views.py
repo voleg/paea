@@ -96,7 +96,10 @@ class CalculationViewSet(viewsets.ViewSet):
     @action(methods=['POST'], detail=True, name='restart')
     def restart(self, request, pk=None):
         obj = Calculation.get(id=pk)
-        obj.update(status=CalcStatus.new)
+        obj.update(
+            status=CalcStatus.new,
+            # refresh=True,
+        )
         obj.run()
         return Response(obj.to_display())
  

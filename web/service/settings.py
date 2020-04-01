@@ -165,16 +165,14 @@ CELERY_QUEUES = (
 )
 
 CELERYD_HIJACK_ROOT_LOGGER = True
-CELERYD_MAX_MEMORY_PER_CHILD = 1 * 1024 * 1024
-CELERYD_MAX_TASKS_PER_CHILD = 4
+# CELERYD_MAX_MEMORY_PER_CHILD = 1 * 1024 * 1024
+CELERYD_MAX_TASKS_PER_CHILD = 16
 
 ELASTICSEARCH = {
     'HOSTS': [
         config_get('elasticsearch', 'host'),
     ]
 }
-
-
 
 LOGGING = {
     'version': 1,

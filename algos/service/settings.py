@@ -22,8 +22,8 @@ accept_content = ['json']
 task_default_queue='algos'
 imports = ('service.tasks',)
 task_ignore_result=True
-worker_prefetch_multiplier=1
-worker_max_tasks_per_child=1
+worker_prefetch_multiplier=10
+worker_max_tasks_per_child=100
 task_store_errors_even_if_ignored=True
 task_acks_late=True
 
