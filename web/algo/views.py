@@ -48,20 +48,33 @@ class CalculationViewSet(viewsets.ViewSet):
         }
         return Response(data)
 
-    def list(self, request):
-        hits = (
-            CalculationSearch(1000)
-            .query()
-        )
+    def _get_position(self, limit=10, offset=0):
+        try:
+            limit = int(self.request.query_params.get('limit', limit))
+            offset = int(self.request.query_params.get('offset', offset))
 
-        def format_hits(hit):
-            doc = hit.to_dict()
-            doc['id'] = hit.meta.id
-            return doc
+        except Exception:
+            pass
 
+        return limit, offset
+
+
+    def list(self, request, *args, **kwargs):
+        columns = [
+            {'id': 'status', 'name': 'Status'},
+            {'id': 'id', 'name': 'ID', 'hidden': True },
+            {'id': 'created_at', 'name': 'Created at'},
+            {'id': 'func_name', 'name': 'Function'},
+            {'id': 'params_display' , 'name': 'Params'},
+            {'id': 'exec_time', 'name': 'time', 'type': 'numeric'},
+            {'id': 'result', 'name': 'Result', 'type': 'numeric'}
+        ]
+        hits = CalculationSearch().query()
+        limit, offset = self._get_position()
         return Response({
             'total': hits.total,
-            'items': [format_hits(i) for i in hits.scroll]
+            'columns': columns,
+            'items': [h.to_display() for h in hits.search[offset:limit]]
         })
 
     def create(self, request):
