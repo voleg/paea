@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from algo.indicies import Calculation, CalculationSearch
+from algo.indicies import Calculation, CalculationSearch, Status as CalcStatus
 from algo.serializers import CalculationRequestSerializer
 
 
@@ -91,8 +91,15 @@ class CalculationViewSet(viewsets.ViewSet):
         )
         obj.save()
         obj.run()
-        return Response({'detail': obj.meta.id})
+        return Response(obj.to_display())
 
+    @action(methods=['POST'], detail=True, name='restart')
+    def restart(self, request, pk=None):
+        obj = Calculation.get(id=pk)
+        obj.update(status=CalcStatus.new)
+        obj.run()
+        return Response(obj.to_display())
+ 
     def retrieve(self, request, pk=None):
         return Response({})
 

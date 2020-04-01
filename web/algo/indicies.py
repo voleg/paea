@@ -48,8 +48,26 @@ class Calculation(Document):
             'number_of_replicas': 0
         }
 
+    def get_calc_exec_time(self):
+        """ extracts `execution time` of function """
+        if 'result' in self and 'execution_time' in self.result:
+            return self.result.execution_time
+
+    def get_result(self, default=None):
+        try:
+            if self.status == Status.complete:
+                return self.result.result
+            if self.status == Status.error:
+                return self.result.error
+
+        except Exception as e:
+            return default
 
     def get_params(self):
+        """
+        transforms params suitable for execution
+        for ex.: from { name: n, value: 5 } -> {n: 5}
+        """
         params = {}
         for p in self.params:
             # type p: algo.indices.Params
@@ -60,7 +78,18 @@ class Calculation(Document):
 
         return params
 
-    def run(self):
+    def get_params_string(self, default='') -> str:
+        """ creates a string representation of params """
+        try:
+            return (', '.join([f"{p['name']}={p['value']}" for p in self.params]))
+        except Exception as e:
+            return default
+
+
+    def run(self) -> 'celery.result.AsyncResult':
+        """
+        set an execution task
+        """
         return celery_app.send_task(
             'calculate_function',
             queue='algos',
@@ -77,6 +106,14 @@ class Calculation(Document):
             }
         )
 
+    def to_display(self):
+        doc = self.to_dict()
+        doc['id'] = self.meta.id
+        doc['params_display'] = self.get_params_string()
+        doc['exec_time'] = self.get_calc_exec_time()
+        doc['result'] = self.get_result()
+        return doc
+
     def save(self, **kwargs):
         self.status = Status.new
         self.created_at = datetime.now()
@@ -91,13 +128,18 @@ class CalculationSearch(object):
 
     def query(self, func_name=None, created_at=None):
         must_q = []
-
         if func_name:
             must_q.append(Q('match', tissue={'query': func_name, 'operator': 'and'}))
 
-        qs = self.search.query(Q('bool', must=must_q))
+        if len(must_q):
+            q = Q('bool', must=must_q)
+        else:
+            q = Q('match_all')
+
+        qs = self.search.sort("-created_at").query(q)
+        
         return AttrDict({
             'total': qs.count(),
-            'scroll': qs.scan(),
+            'scroll': qs.scan(), # FIXME: does not respects sorting ...
             'search': qs,
         })
