@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  font-family:'Roboto', 'Segoe UI', 'Oxygen', -apple-system, BlinkMacSystemFont,
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+}
+
+.App-brand {
+  padding-left: 15px;
+}
+
+.App-content {
+  margin-top: 32px;
+  justify-content: center;
+}
+
+.App-card {
+  margin-bottom: 16px;
+}
