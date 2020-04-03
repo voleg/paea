@@ -7,7 +7,7 @@ from kombu import Exchange, Queue
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 config_dev_path = os.path.join(BASE_DIR, 'deploy/settings_dev.conf')
-config_prod_path = '/etc/algo_web/settings.conf'
+config_prod_path = '/code/deploy/settings.conf'
 
 config = configparser.RawConfigParser()
 config.read((config_dev_path, config_prod_path))
@@ -25,7 +25,6 @@ SECRET_KEY = config_get('main', 'SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config_get('main', 'DEBUG', False, method=config.getboolean)
 
-
 ALLOWED_HOSTS = ["*"]
 
 
@@ -37,25 +36,29 @@ INSTALLED_APPS = [
    # 'django.contrib.contenttypes',
    # 'django.contrib.sessions',
    # 'django.contrib.messages',
-    'django.contrib.staticfiles' if DEBUG else '',
     'rest_framework',
-    'algos'
+    'algo',
 ]
 
 if DEBUG:
-    INSTALLED_APPS += ['corsheaders']
+    INSTALLED_APPS += [
+        'corsheaders',
+        'django.contrib.staticfiles'
+    ]
     CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     # 'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     # 'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(1, 'corsheaders.middleware.CorsMiddleware')
 
 ROOT_URLCONF = 'service.urls'
 
@@ -87,29 +90,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 

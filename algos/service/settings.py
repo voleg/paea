@@ -4,7 +4,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 config_dev_path = os.path.join(BASE_DIR, 'deploy/settings_dev.conf')
-config_prod_path = '/etc/algos/settings.conf'
+config_prod_path = '/code/deploy/settings.conf'
 
 config = configparser.RawConfigParser()
 config.read((config_dev_path, config_prod_path))

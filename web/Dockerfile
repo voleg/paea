@@ -1,12 +1,15 @@
-FROM python:3.7.4-alpine
+FROM python:3.7.5-alpine3.10
+RUN apk --update add --no-cache uwsgi uwsgi-python3
 
-RUN pip3 install -U pip setuptools
-RUN pip3 install uwsgi
+# DEBIAN
+# FROM python:3.7
+# RUN pip install -U --timeout 1000 pip setuptools && apt-get update -qq
+# RUN pip3 install uwsgi
 
-ENV DJANGO_SETTINGS_MODULE app.settings
+ENV DJANGO_SETTINGS_MODULE service.settings
 
-COPY requirements.txt /pandora/requirements.txt
-RUN pip3 install -r /pandora/requirements.txt
+COPY requirements.txt /code/requirements.txt
+RUN pip install -r /code/requirements.txt
 
 ADD . /code
 WORKDIR /code
@@ -14,4 +17,4 @@ WORKDIR /code
 # Remove develop settings from production image
 RUN rm -rf deploy/settings_dev.conf
 
-ENTRYPOINT ["celery", "-A", "service.celeryconf", "-n" "web", "-l", "debug", "-c", "4"]
+CMD 'deploy/start_web_server.sh'
