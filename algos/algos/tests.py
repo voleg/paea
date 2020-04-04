@@ -3,6 +3,8 @@ import unittest
 from algos.implementations import fibonacci_naive
 from algos.implementations import factorial_naive
 from algos.implementations import ackerman_naive
+from algos.implementations.ackermann import ackermann_memo_func
+
 
 
 class AlgorithmsCorrectnessTestCase(unittest.TestCase):
@@ -46,3 +48,21 @@ class AlgorithmsCorrectnessTestCase(unittest.TestCase):
         self.assertEqual(125, ackerman_naive(3, 4))
         self.assertEqual(253, ackerman_naive(3, 5))
         # self.assertEqual(65533, ackerman_naive(4, 1))
+
+    def test_ackermann_memo_function(self):
+        self.assertEqual(ackermann_memo_func(0,0), ackerman_naive(0, 0))
+        self.assertEqual(ackermann_memo_func(0, 1), ackerman_naive(0, 1))
+        self.assertEqual(ackermann_memo_func(0, 2), ackerman_naive(0, 2))
+        self.assertEqual(ackermann_memo_func(0, 3), ackerman_naive(0, 3))
+        self.assertEqual(ackermann_memo_func(1, 2), ackerman_naive(1, 2))
+        self.assertEqual(ackermann_memo_func(1, 3), ackerman_naive(1, 3))
+        self.assertEqual(ackermann_memo_func(1, 4), ackerman_naive(1, 4))
+        self.assertEqual(ackermann_memo_func(2, 4), ackerman_naive(2, 4))
+        self.assertEqual(ackermann_memo_func(2, 5), ackerman_naive(2, 5))
+        self.assertEqual(ackermann_memo_func(3, 1), ackerman_naive(3, 1))
+        self.assertEqual(ackermann_memo_func(3, 2), ackerman_naive(3, 2))
+        self.assertEqual(ackermann_memo_func(3, 3), ackerman_naive(3, 3))
+        self.assertEqual(ackermann_memo_func(3, 4), ackerman_naive(3, 4))
+        self.assertEqual(ackermann_memo_func(3, 5), ackerman_naive(3, 5))
+        self.assertEqual(65533, ackermann_memo_func(4, 1))
+
