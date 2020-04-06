@@ -1,4 +1,5 @@
-FROM python:3.7.5-alpine3.10
+FROM pypy:3.6-7.3.0-slim
+# FROM python:3.7.5-alpine3.10
 # RUN apk --update add --no-cache g++
 
 # debian
@@ -15,6 +16,6 @@ WORKDIR /code
 # Remove develop settings from production image
 RUN rm -rf deploy/settings_dev.conf
 
-RUN python setup.py install
+RUN pypy3 setup.py install
 
 CMD 'deploy/worker.sh'
