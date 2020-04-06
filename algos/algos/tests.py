@@ -4,10 +4,10 @@ from algos.implementations import fibonacci_naive
 from algos.implementations import factorial_naive
 from algos.implementations import ackerman_naive
 from algos.implementations.ackermann import ackermann_memo_func
+from algos.implementations.ackermann import ackermann_stack_loop
 
 
-
-class AlgorithmsCorrectnessTestCase(unittest.TestCase):
+class FibonacciTestCase(unittest.TestCase):
     def test_fibonacci(self):
         self.assertEqual(0, fibonacci_naive(0))
         self.assertEqual(1, fibonacci_naive(1))
@@ -20,6 +20,7 @@ class AlgorithmsCorrectnessTestCase(unittest.TestCase):
         self.assertEqual(4181, fibonacci_naive(19))
         self.assertEqual(3524578, fibonacci_naive(33))
 
+class FactorialTestCase(unittest.TestCase):
     def test_factorial(self):
         self.assertEqual(0, factorial_naive(0))
         self.assertEqual(1, factorial_naive(1))
@@ -32,7 +33,8 @@ class AlgorithmsCorrectnessTestCase(unittest.TestCase):
         self.assertEqual(121645100408832000, factorial_naive(19))
         self.assertEqual(2432902008176640000, factorial_naive(20))
 
-    def test_ackerman_function(self):
+class AckermannTest(unittest.TestCase):
+    def test_ackerman_naive_function(self):
         self.assertEqual(1, ackerman_naive(0, 0))
         self.assertEqual(2, ackerman_naive(0, 1))
         self.assertEqual(3, ackerman_naive(0, 2))
