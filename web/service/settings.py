@@ -144,7 +144,7 @@ CELERY_QUEUES = (
     Queue('results', Exchange('results'), routing_key='results'),
 )
 
-CELERYD_HIJACK_ROOT_LOGGER = True
+CELERYD_HIJACK_ROOT_LOGGER = False
 # CELERYD_MAX_MEMORY_PER_CHILD = 1 * 1024 * 1024
 CELERYD_MAX_TASKS_PER_CHILD = 16
 

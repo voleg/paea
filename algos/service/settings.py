@@ -15,7 +15,7 @@ config_get = lambda x, y, z=None, method=config.get: _config_check(x, y) and met
 DEBUG = config_get('app', 'DEBUG', False, method=config.getboolean)
 
 # Celery config
-worker_hijack_root_logger=True
+worker_hijack_root_logger=False
 broker_url = config_get('celery', 'BROKER')
 result_backend = config_get('celery', 'RESULT_BACKEND')
 accept_content = ['json']
