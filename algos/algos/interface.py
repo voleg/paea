@@ -10,7 +10,7 @@ class AlgoTools(object):
         self.algorithms ={
             'factorial': factorial_naive,
             'fibonacci': fibonacci_naive,
-            'ackermann': ackerman_memo_func,
+            'ackermann': ackermann_memo_func,
         }
 
     def get_function_by_name(self, name):
