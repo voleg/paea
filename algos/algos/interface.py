@@ -1,7 +1,7 @@
 from algos.implementations import factorial_naive
 from algos.implementations import fibonacci_naive
 from algos.implementations import ackerman_naive
-from algos.implementations.ackerman import ackermann_memo_func
+from algos.implementations import ackermann_memo_func
 
 
 class AlgoTools(object):
