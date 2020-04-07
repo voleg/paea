@@ -16,7 +16,7 @@ def ackerman_naive(m, n):
 
 def ackermann_memo_func(m, n, cache={}):
     """
-    ~ 300 times faster then naive
+    ~ 200 times faster then naive
     crashed at (4, 2) 
     """
     if (m, n) in cache:
@@ -40,3 +40,23 @@ def ackermann_memo_func(m, n, cache={}):
             _n = cache[(m, n - 1)]
 
         return ackermann_memo_func(m - 1, _n)
+
+
+def ackermann_stack_loop(m, n, stack=[]):
+	while m >=0 :
+		if m == 0:
+			n = n + 1
+			if stack:
+				m = stack.pop()
+			else:
+				return n
+
+		elif n == 0:
+			n = 1
+			m = m - 1
+		else:
+			n = n - 1
+			stack.append(m - 1)
+
+
+

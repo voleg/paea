@@ -68,3 +68,21 @@ class AckermannTest(unittest.TestCase):
         self.assertEqual(ackermann_memo_func(3, 5), ackerman_naive(3, 5))
         self.assertEqual(65533, ackermann_memo_func(4, 1))
 
+    def test_ackermann_stack_loop_function(self):
+        self.assertEqual(ackermann_stack_loop(0, 0), ackerman_naive(0, 0))
+        self.assertEqual(ackermann_stack_loop(0, 1), ackerman_naive(0, 1))
+        self.assertEqual(ackermann_stack_loop(0, 2), ackerman_naive(0, 2))
+        self.assertEqual(ackermann_stack_loop(0, 3), ackerman_naive(0, 3))
+        self.assertEqual(ackermann_stack_loop(1, 2), ackerman_naive(1, 2))
+        self.assertEqual(ackermann_stack_loop(1, 3), ackerman_naive(1, 3))
+        self.assertEqual(ackermann_stack_loop(1, 4), ackerman_naive(1, 4))
+        self.assertEqual(ackermann_stack_loop(2, 4), ackerman_naive(2, 4))
+        self.assertEqual(ackermann_stack_loop(2, 5), ackerman_naive(2, 5))
+        self.assertEqual(ackermann_stack_loop(3, 1), ackerman_naive(3, 1))
+        self.assertEqual(ackermann_stack_loop(3, 2), ackerman_naive(3, 2))
+        self.assertEqual(ackermann_stack_loop(3, 3), ackerman_naive(3, 3))
+        self.assertEqual(ackermann_stack_loop(3, 4), ackerman_naive(3, 4))
+        self.assertEqual(ackermann_stack_loop(3, 5), ackerman_naive(3, 5))
+        # self.assertEqual(65533, ackermann_stack_loop(4, 1))
+
+
