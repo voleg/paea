@@ -6,8 +6,12 @@ dev_env:
 package:
 	(cd algos;make package)
 
-test:
+test_algos_local:
 	(cd algos;make test)
+
+test:
+	docker-compose build algos
+	docker-compose run algos /bin/sh -c 'pypy3 -m unittest -v'
 
 clean:
 	rm -rf *.out
