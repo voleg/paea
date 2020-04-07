@@ -5,7 +5,10 @@ FROM pypy:3.6-7.3.0-slim
 # debian
 # FROM python:3.7
 # RUN pip install -U --timeout 1000 pip setuptools && apt-get update -qq
+
 LABEL authors="Oleg Sapunov <ffrooty@gmail.com>"
+
+RUN python -m pip install --timeout 1000 -U pip setuptools
 
 COPY requirements.txt /code/requirements.txt
 RUN pip install -r /code/requirements.txt
