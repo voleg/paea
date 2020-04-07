@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+
 from django.conf import settings
 from elasticsearch_dsl import (
     Date,
@@ -13,6 +14,8 @@ from elasticsearch_dsl import (
     Q,
     AttrDict
 )
+from celery.result import AsyncResult
+
 from service.celeryconfig import app as celery_app
 
 
@@ -57,11 +60,25 @@ class Calculation(Document):
         try:
             if self.status == Status.complete:
                 return self.result.result
+
             if self.status == Status.error:
                 return self.result.error
 
+            # This will execute only if no other statuses recieved the valid way
+            return self._process_async_failure()
+
         except Exception as e:
             return default
+
+    def _process_async_failure(self):
+        res = self._async_result
+        if res and res.status == 'FAILURE':
+            err_msg = str(self._async_result.result)
+            self.update(
+                status=Status.error,
+                result = {'error': err_msg}
+            )
+            return err_msg
 
     def get_params(self):
         """
@@ -90,7 +107,7 @@ class Calculation(Document):
         """
         set an execution task
         """
-        return celery_app.send_task(
+        task = celery_app.send_task(
             'calculate_function',
             queue='algos',
             kwargs={
@@ -105,6 +122,23 @@ class Calculation(Document):
                 },
             }
         )
+        self.task_id = task.id
+        self.save()
+        return
+
+    @property
+    def _async_result(self):
+        return AsyncResult(self.task_id)
+
+    def get_task_status(self):
+        # TODO: cache this
+        if self.task_id: 
+            return self._async_result.status
+
+    def get_task_result(self):
+        # TODO: cache this
+        if self.task_id:
+            return self._async_result.result
 
     def to_display(self):
         doc = self.to_dict()
