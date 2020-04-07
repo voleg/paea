@@ -8,7 +8,7 @@ FROM pypy:3.6-7.3.0-slim
 
 LABEL authors="Oleg Sapunov <ffrooty@gmail.com>"
 
-RUN python -m pip install --timeout 1000 -U pip setuptools
+RUN pip install --timeout 1000 -U pip setuptools
 
 COPY requirements.txt /code/requirements.txt
 RUN pip install -r /code/requirements.txt
