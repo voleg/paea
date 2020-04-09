@@ -1,6 +1,7 @@
 import sys
 import logging
-sys.setrecursionlimit(10**6)
+
+sys.setrecursionlimit(10 ** 6)
 
 log = logging.getLogger(__name__)
 
@@ -43,20 +44,21 @@ def ackermann_memo_func(m, n, cache={}):
 
 
 def ackermann_stack_loop(m, n, stack=[]):
-	while m >=0 :
-		if m == 0:
-			n = n + 1
-			if stack:
-				m = stack.pop()
-			else:
-				return n
+    while m >= 0:
+        if m == 0:
+            n = n + 1
+            if stack:
+                m = stack.pop()
+            else:
+                return n
 
-		elif n == 0:
-			n = 1
-			m = m - 1
-		else:
-			n = n - 1
-			stack.append(m - 1)
+        elif n == 0:
+            n = 1
+            m = m - 1
+        else:
+            n = n - 1
+            stack.append(m - 1)
+
 
 
 
