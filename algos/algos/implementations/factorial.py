@@ -1,8 +1,3 @@
-import logging
-
-log = logging.getLogger(__name__)
-
-
 def factorial_naive(n: int) -> int:
     """
     n = 120
@@ -42,7 +37,6 @@ def factorial_while_loop(n: int, acc: int = 1) -> int:
         acc = n*acc
         n -= 1
     return acc
-
 
 
 def _tree(l: int, r: int) -> int:

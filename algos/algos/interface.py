@@ -1,17 +1,27 @@
-from algos.implementations.factorial import factorial_tree
-from algos.implementations.fibonacci import fibonacci_memo
-from algos.implementations import ackerman_naive
-from algos.implementations import ackermann_memo_func
+import sys
+import inspect
+
+from algos import implementations
+
+sys.setrecursionlimit(10 ** 5)
 
 
 class AlgoTools(object):
 
     def __init__(self):
         self.algorithms ={
-            'factorial': factorial_tree,
-            'fibonacci': fibonacci_memo,
-            'ackermann': ackermann_memo_func,
+            'factorial': implementations.factorial_for_loop,
+            'fibonacci': implementations.fibonacci_memo,
+            'ackermann': implementations.ackermann_while_loop,
         }
+
+    def _get_impl(self):
+        """ TODO: ability to run other implementations """
+        obj = {}
+        for name, obj in inspect.getmembers(implementations):
+            if not name.startswith('__') and inspect.isfunction(obj):
+                obj.update({name: obj})
+        return obj
 
     def get_function_by_name(self, name):
         return self.algorithms.get(name, None)

@@ -66,7 +66,7 @@ def calculate(self, options=None, on_result=None, *args, **kwargs):
         )
     except SoftTimeLimitExceeded as e:
         log.error(
-           f'{debug_info} calculats too slow! {e.__class__.__name__} {e}',
+           f'{debug_info} calculates too slow! {e.__class__.__name__} {e}',
             exc_info=True,
         )
         send(Status.error, result={'error': f'killed after {TIME_LIMIT} seconds'})
