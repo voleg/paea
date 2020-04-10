@@ -8,7 +8,7 @@ from service import settings
 
 log = get_task_logger(__name__)
 
-TIME_LIMIT = 30
+TIME_LIMIT = 300
 
 class Status:
     accepted = 'accepted'
