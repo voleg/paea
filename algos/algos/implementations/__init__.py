@@ -13,11 +13,12 @@ from .factorial import (
 from .fibonacci import (
     fibonacci_naive,
     fibonacci_Binet_form,
-    fibonacci_memo
+    fibonacci_memo,
+    fibonacci_while_loop
 )
 
 from .ackermann import ackermann_memo_func
 
 ackermann = ackermann_while_loop
 factorial = factorial_for_loop
-fibonacci = fibonacci_memo
+fibonacci = fibonacci_while_loop
