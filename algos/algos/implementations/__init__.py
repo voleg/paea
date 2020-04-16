@@ -1,3 +1,7 @@
+import sys
+
+sys.setrecursionlimit(10**5)
+
 from .ackermann import (
     ackerman_naive,
     ackermann_memo_func,
