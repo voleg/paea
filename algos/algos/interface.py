@@ -17,11 +17,11 @@ class AlgoTools(object):
 
     def _get_impl(self):
         """ TODO: ability to run other implementations """
-        obj = {}
+        out = {}
         for name, obj in inspect.getmembers(implementations):
             if not name.startswith('__') and inspect.isfunction(obj):
-                obj.update({name: obj})
-        return obj
+                out.update({name: obj})
+        return out
 
     def get_function_by_name(self, name):
         return self.algorithms.get(name, None)
