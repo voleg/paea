@@ -2,6 +2,7 @@ import unittest
 
 from algos.implementations.factorial import factorial_naive
 from algos.implementations.factorial import factorial_for_loop
+from algos.implementations.factorial import factorial_while_loop
 from algos.implementations.factorial import factorial_tree
 
 
@@ -29,6 +30,18 @@ class FactorialTestCase(unittest.TestCase):
         self.assertEqual(6402373705728000, factorial_for_loop(18))
         self.assertEqual(121645100408832000, factorial_for_loop(19))
         self.assertEqual(2432902008176640000, factorial_for_loop(20))
+
+    def test_factorial_while_loop(self):
+        self.assertEqual(1, factorial_while_loop(0))
+        self.assertEqual(1, factorial_while_loop(1))
+        self.assertEqual(24, factorial_while_loop(4))
+        self.assertEqual(362880, factorial_while_loop(9))
+        self.assertEqual(3628800, factorial_while_loop(10))
+        self.assertEqual(6227020800, factorial_while_loop(13))
+        self.assertEqual(355687428096000, factorial_while_loop(17))
+        self.assertEqual(6402373705728000, factorial_while_loop(18))
+        self.assertEqual(121645100408832000, factorial_while_loop(19))
+        self.assertEqual(2432902008176640000, factorial_while_loop(20))
 
     def test_factorial_prod_tree(self):
         self.assertEqual(1, factorial_tree(0))

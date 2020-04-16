@@ -3,6 +3,7 @@ import unittest
 from algos.implementations import fibonacci_naive
 from algos.implementations.fibonacci import fibonacci_Binet_form
 from algos.implementations.fibonacci import fibonacci_memo
+from algos.implementations.fibonacci import fibonacci_while_loop
 from .fib_data import fib
 
 class FibonacciTestCase(unittest.TestCase):
@@ -28,4 +29,9 @@ class FibonacciTestCase(unittest.TestCase):
     def test_fibonacci_memo_func(self):
         for i in range(70):
             self.assertEqual(fib[i], fibonacci_memo(i))
+
+
+    def test_fibonacci_while_loop(self):
+        for i in range(70):
+            self.assertEqual(fib[i], fibonacci_while_loop(i))
 
