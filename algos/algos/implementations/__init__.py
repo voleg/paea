@@ -9,15 +9,12 @@ from .factorial import (
     factorial_while_loop,
     factorial_tree
 )
-
 from .fibonacci import (
     fibonacci_naive,
     fibonacci_Binet_form,
     fibonacci_memo,
     fibonacci_while_loop
 )
-
-from .ackermann import ackermann_memo_func
 
 ackermann = ackermann_while_loop
 factorial = factorial_for_loop

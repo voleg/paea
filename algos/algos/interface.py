@@ -11,7 +11,7 @@ class AlgoTools(object):
     def __init__(self):
         self.algorithms ={
             'factorial': implementations.factorial_for_loop,
-            'fibonacci': implementations.fibonacci_memo,
+            'fibonacci': implementations.fibonacci_while_loop,
             'ackermann': implementations.ackermann_while_loop,
         }
 
