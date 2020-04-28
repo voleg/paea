@@ -1,4 +1,3 @@
-console.log(process.env)
 var BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000';
 
 export default {
