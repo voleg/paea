@@ -1,5 +1,6 @@
 from math import sqrt, pow
 
+from .tail import TRE_stack_recall
 
 
 def fibonacci_naive(n: int) -> int:
@@ -13,6 +14,20 @@ def fibonacci_naive(n: int) -> int:
         return n
 
     return fibonacci_naive(n - 1) + fibonacci_naive(n - 2)
+
+
+@TRE_stack_recall
+def fibonacci_tre(n: int, curr: int = 0, next: int = 1) -> int:
+    """
+    Fibonacci numbers with Tail recursion elimination
+    n = 10
+    CPython3: 23.3 µs ± 479 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+    PyPy3: 2.23 µs ± 64 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+    """
+    if n == 0:
+        return curr
+    else:
+        return fibonacci_tre(n - 1, next, curr + next)
 
 
 def fibonacci_Binet_form(n: int) -> int:
@@ -86,3 +101,61 @@ def fibonacci_while_loop(n: int, stack: list = []) -> int:
 
     return a
 
+
+
+# from https://www.nayuki.io/page/fast-fibonacci-algorithms 
+def fib_fast(n):
+    """
+    fibonacci numbers: implementation production tree implementation
+    n = 10
+    CPython3: 1.42 µs ± 22.4 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+    PyPy3: 1.39 ns ± 0.0124 ns per loop (mean ± std. dev. of 7 runs, 1000000000 loops each)
+
+    details:
+    PyPy:
+    In [12]: %timeit fib_fast(10)
+    1.39 ns ± 0.0124 ns per loop (mean ± std. dev. of 7 runs, 1000000000 loops each)
+    In [13]: %timeit fib_fast(10)
+    1.44 ns ± 0.0337 ns per loop (mean ± std. dev. of 7 runs, 1000000000 loops each)
+    In [14]: %timeit fib_fast(1000)
+    840 ns ± 26.5 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+    In [15]: %timeit fib_fast(10000)
+    14.3 µs ± 327 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+    In [16]: %timeit fib_fast(100000)
+    624 µs ± 19.8 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+    In [17]: %timeit fib_fast(1000000)
+    28.4 ms ± 1.88 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    In [18]: %timeit fib_fast(10000000)
+    1.08 s ± 24.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+
+    CPython:
+    In [6]: %timeit fib_fast(10)
+    1.42 µs ± 22.4 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+    In [7]: %timeit fib_fast(1000)
+    4.74 µs ± 56.6 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+    In [8]: %timeit fib_fast(10000)
+    43.6 µs ± 1.96 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+    In [9]: %timeit fib_fast(100000)
+    1.67 ms ± 44 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+    In [10]: %timeit fib_fast(1000000)
+    64.3 ms ± 1e+03 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+    In [11]: %timeit fib_fast(10000000)
+    2.53 s ± 24.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+
+    """
+    if n < 0:
+        raise ValueError("Negative arguments not implemented")
+    return _fib(n)[0]
+
+# (Private) Returns the tuple (F(n), F(n+1)).
+def _fib(n):
+    if n == 0:
+        return (0, 1)
+    else:
+        a, b = _fib(n // 2)
+        c = a * (b * 2 - a)
+        d = a * a + b * b
+        if n % 2 == 0:
+            return (c, d)
+        else:
+            return (d, c + d)

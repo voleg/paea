@@ -14,10 +14,10 @@ function App(props) {
     setColumns(data.columns)
   }
   const noop = e => false
-  function updateTaskList (row) {
-    const tasks = [row, ...taskList.items]
-    setTasklist({ ...taskList, items: tasks})
-  }
+  // function updateTaskList (row) {
+  //   const tasks = [row, ...taskList.items]
+  //   setTasklist({ ...taskList, items: tasks})
+  // }
 
   useEffect( () => {
     store.getFeatures(setFetures)
