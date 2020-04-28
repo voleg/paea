@@ -13,9 +13,10 @@ def store_calculation_result(**kwargs):
     status_message = kwargs.get('status')
     result = kwargs.get('result')
     doc = Calculation.get(id=calc_id)
+    doc.meta.version=None
     doc.update(
         status=status_message,
         result = result,
-        # refresh=True,
+        retry_on_conflict=10
     )
     log.info('Calculation #{} result saved'.format(calc_id))
