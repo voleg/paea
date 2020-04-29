@@ -11,7 +11,7 @@ test_algos_local:
 
 test:
 	docker-compose build algos
-	docker-compose run algos /bin/sh -c 'pypy3 -m unittest -v'
+	docker-compose run --no-deps algos /bin/sh -c 'pypy3 -m unittest -v'
 
 clean:
 	rm -rf *.out
