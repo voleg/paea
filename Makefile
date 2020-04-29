@@ -16,6 +16,8 @@ test:
 clean:
 	rm -rf *.out
 	(cd algos;make clean)
+	(cd web;make clean)
+	find . -name '.DS_Store' -delete
 
 build_UI_image:
 	(cd ui; make clean; make build)
