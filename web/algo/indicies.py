@@ -22,7 +22,7 @@ from service.celeryconfig import app as celery_app
 
 log = logging.getLogger(__name__)
 
-connections.create_connection(hosts=settings.ELASTICSEARCH['HOSTS'], timeout=20)
+connections.create_connection(hosts=settings.ELASTICSEARCH['HOSTS'], timeout=120)
 
 
 class Status:

@@ -43,9 +43,12 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+    # image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: elasticsearch
     restart: always
+    # command: ["elasticsearch", "-Elogger.level=ERROR"]
     environment:
+      - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
