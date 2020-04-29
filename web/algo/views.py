@@ -71,10 +71,15 @@ class CalculationViewSet(viewsets.ViewSet):
         ]
         hits = CalculationSearch().query()
         limit, offset = self._get_position()
+
+        items = []
+        if hits.total:
+            items = [h.to_display() for h in hits.search[offset:limit]]
+
         return Response({
             'total': hits.total,
             'columns': columns,
-            'items': [h.to_display() for h in hits.search[offset:limit]]
+            'items': items
         })
 
     def create(self, request):
