@@ -14,6 +14,7 @@ from elasticsearch_dsl import (
     Q,
     AttrDict
 )
+from elasticsearch_dsl.document import DOC_META_FIELDS, META_FIELDS
 from celery.result import AsyncResult
 
 from service.celeryconfig import app as celery_app
@@ -36,7 +37,39 @@ class Params(InnerDoc):
     value=Integer()
 
 
-class Calculation(Document):
+# https://github.com/elastic/elasticsearch-dsl-py/issues/793
+class MyDoc(Document):
+    def save(self, using=None, index=None, validate=True, skip_empty=True, **kwargs):
+        """
+
+        """
+        if validate:
+            self.full_clean()
+
+        es = self._get_connection(using)
+        # extract routing etc from meta
+        doc_meta = dict(
+            (k, self.meta[k])
+            for k in DOC_META_FIELDS
+            if k in self.meta
+        )
+        doc_meta.update(kwargs)
+        meta = es.index(
+            index=self._get_index(index),
+            doc_type=self._doc_type.name,
+            body=self.to_dict(skip_empty=skip_empty),
+            **doc_meta
+        )
+        # update meta information from ES
+        for k in META_FIELDS:
+            if '_' + k in meta:
+                setattr(self.meta, k, meta['_' + k])
+
+        # return True/False if the document has been created/updated
+        return meta.get('result', '') == 'created'
+
+
+class Calculation(MyDoc):
     # _id = Integer()
     func_name = Text(fields={'raw': Keyword()})
     status = Text(fields={'raw': Keyword()})
@@ -172,8 +205,15 @@ class CalculationSearch(object):
 
         qs = self.search.sort("-created_at").query(q)
 
+        # research and FIXME
+        total = 0
+        try:
+            total = qs.count()
+        except KeyError as e:
+            log.warning('Count request could not be completed')
+
         return AttrDict({
-            'total': qs.count(),
+            'total': total,
             'scroll': qs.scan(), # FIXME: does not respects sorting ...
             'search': qs,
         })
